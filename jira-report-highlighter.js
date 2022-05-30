@@ -110,6 +110,11 @@
     const records = Array.from(table.children);
     records.forEach(element => element.classList.add('record'));
 
+    records.forEach(element => {
+        const issueLinks = element.querySelectorAll('a');
+        issueLinks.forEach(link => link.setAttribute('target', '_blank'));
+    });
+
     ///////////////////////////////////
     ///////////////////////////////////
     //
