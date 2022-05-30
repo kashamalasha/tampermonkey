@@ -74,7 +74,7 @@
 
     sheet.insertRule(`
     .list-to-green {
-       background-color: lightgreen !important;
+       background-color: #b2fa6a !important;
     }`, sheet.cssRules.length);
 
 
