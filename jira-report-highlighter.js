@@ -2,6 +2,8 @@
 // @name         Jira Report Highlighter
 // @namespace    http://tampermonkey.net/
 // @version      0.1
+// @updateURL    https://raw.githubusercontent.com/kashamalasha/tampermonkey/master/jira-report-highlighter.js
+// @downloadURL  https://raw.githubusercontent.com/kashamalasha/tampermonkey/master/jira-report-highlighter.js
 // @description  Script helps to highlight rows in Jira report
 // @author       You
 // @include      /^https:\/\/jira\.tcsbank\.ru\/secure\/TimesheetReport\.jspa.*/
