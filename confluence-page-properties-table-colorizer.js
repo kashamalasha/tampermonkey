@@ -12,14 +12,21 @@
 (function() {
     'use strict';
 
+    const KEY_WORD = 'test6'
+
+    const COLUMN_NAME = {
+        colorize: 'name 2',
+        highlight: 'name 1'
+    }
+
     const GRADIENT = {
-        left:   '#ff6200', //red
+        left: '#ff6200', //red
         middle: '#ffe200', //yellow
-        right:  '#9dff00', //green
+        right: '#9dff00', //green
         alpha: 0.6
     }
 
-    const STYLE_ABROAD = {
+    const STYLE_HIGHLIGHT = {
         backgroundClip: 'padding-box',
         backgroundColor: '#369',
         color: 'white',
@@ -43,7 +50,7 @@
         } : null;
     }
 
-    const pickColor = function(weight) {
+    const getMixedColor = function(weight) {
 
         const MID_POSITION = 50;
 
@@ -69,17 +76,31 @@
         return `rgba(${mixedColorResultRGB.join()}, ${GRADIENT.alpha})`;
     }
 
+    const getCellIndex = (value) => {
+        let result = null;
+
+        Array.from(targetTable.tHead.rows[0].cells).forEach((cell) => {
+            if (cell.textContent === value) {
+                result = cell.cellIndex + 1;
+            }
+        });
+        
+        return result;
+    }
+
     const targetTable = document.querySelector('#main-content>.table-wrap>table');
-    const cellOfficeValues = targetTable.querySelectorAll('td:nth-child(6)');
-    cellOfficeValues.forEach(el => {
+
+    const cellToColorizeValues = targetTable.querySelectorAll(`td:nth-child(${getCellIndex(COLUMN_NAME.colorize)})`);
+    cellToColorizeValues.forEach(el => {
         const cellValue = parseInt(el.textContent, 10);
-        el.parentElement.style.backgroundColor = pickColor(cellValue);
+        el.style.backgroundColor = getMixedColor(cellValue);
+        // el.parentElement.style.backgroundColor - закрасит всю строку.
     });
 
-    const cellCountryValues = targetTable.querySelectorAll('td:nth-child(2)');
-    cellCountryValues.forEach(el => {
-        if (!el.textContent.includes('РФ') && (el.textContent.replace(/\s+/g, '').length > 0)) {
-            setCSS(el, STYLE_ABROAD);
+    const cellToHighlightValues = targetTable.querySelectorAll(`td:nth-child(${getCellIndex(COLUMN_NAME.highlight)})`);
+    cellToHighlightValues.forEach(el => {
+        if (!el.textContent.includes(KEY_WORD) && (el.textContent.replace(/\s+/g, '').length > 0)) {
+            setCSS(el, STYLE_HIGHLIGHT);
         }
     });
 })();
