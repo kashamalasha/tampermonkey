@@ -1,4 +1,4 @@
-// ==UserScript==
+// ==UserScript== @@
 // @name         Confluence Page Properties table colorizer
 // @namespace    http://tampermonkey.net/
 // @version      0.2
@@ -34,13 +34,13 @@
         borderRadius: '5px'
     }
 
-    const setCSS = function(element, style) {
+    function setCSS(element, style) {
         for (const property in style) {
             element.style[property] = style[property];
         }
     }
 
-    const hexToRGB = function(hex) {
+    function hexToRGB(hex) {
         const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 
         return result ? {
@@ -50,7 +50,7 @@
         } : null;
     }
 
-    const getMixedColor = function(weight) {
+    function getMixedColor(weight) {
 
         const MID_POSITION = 50;
 
@@ -76,7 +76,7 @@
         return `rgba(${mixedColorResultRGB.join()}, ${GRADIENT.alpha})`;
     }
 
-    const getCellIndex = (value) => {
+    function getCellIndex(value) {
         let result = null;
 
         Array.from(targetTable.tHead.rows[0].cells).forEach((cell) => {
