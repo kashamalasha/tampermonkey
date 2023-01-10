@@ -2,9 +2,9 @@
 // @name         Vkusvill receipt check
 // @namespace    http://tampermonkey.net/
 // @version      0.1
-// @description  Script helps to control items in your order
+// @description  Script helps to control items in your receipts
 // @author       kashamalasha
-// @include      /^https:\/\/vkusvill\.ru\/personal\/orders\/\?id*/
+// @include      /^https:\/\/vkusvill\.ru\/personal*/
 // @icon         https://vkusvill.ru/favicon.ico
 // @grant        none
 // ==/UserScript==
@@ -39,27 +39,56 @@
     }`, sheet.cssRules.length);
 
     sheet.insertRule(`
-    .lk-order-detail-products-list__item--checked {
+    .receipt-item-checked {
       background-color: lightgreen;
     }`, sheet.cssRules.length);
+
+    const addButtonsHandler = () => {
+      const buttons = document.querySelectorAll(`.receipt-check-button`);
+      Array.from(buttons).forEach(button => {
+          button.addEventListener(`click`, (evt) => {
+            let parent = '';
+
+            if (evt.target.parentElement.tagName != `TD`) {
+              parent = evt.target.parentElement;
+            } else {
+              parent = evt.target.parentElement.parentElement;
+            }
+              parent.classList.toggle(`receipt-item-checked`);
+              evt.target.innerText = (evt.target.innerText === `+`) ? `-` : `+`;
+          });
+      });
+    }
 
     const checkButton = document.createElement(`button`);
     checkButton.classList.add(`receipt-check-button`);
     checkButton.innerText = `+`;
 
-    const products = document.querySelectorAll(`.lk-order-detail-products-list__item`);
+    const receiptOrder = document.querySelectorAll(`.lk-order-detail-products-list__item`);
 
-    Array.from(products).forEach(i => {
-        i.append(checkButton.cloneNode(true));
-    });
+    if (receiptOrder.length > 0) {
+      Array.from(receiptOrder).forEach(item => {
+        item.append(checkButton.cloneNode(true));
+      });
+      addButtonsHandler();
+    }
 
-    const buttons = document.querySelectorAll(`.receipt-check-button`);
+    let receiptModal = document.querySelector(`#js-lk-modal-check`);
 
-    Array.from(buttons).forEach(button => {
-        button.addEventListener(`click`, (evt) => {
-            evt.target.parentElement.classList.toggle(`lk-order-detail-products-list__item--checked`);
-            evt.target.innerText = (evt.target.innerText === `+`) ? `-` : `+`;
+    const modalObserver = new IntersectionObserver((entries) => {
+      if(entries[0].isIntersecting) {
+        const receiptItemRows = receiptModal.querySelectorAll(`.js-datalayer-catalog-list-item`);
+        const receiptButtonCell = document.createElement(`td`);
+        receiptButtonCell.append(checkButton.cloneNode(true));
+        
+        Array.from(receiptItemRows).forEach(item => {
+          item.append(receiptButtonCell.cloneNode(true));
         });
+        
+        addButtonsHandler();
+      }
     });
+
+    modalObserver.observe(receiptModal);
 
 })();
